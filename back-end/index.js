@@ -20,7 +20,12 @@ app.post("/sign-up", (req, res) => {
 
 // REQUISIÇÃO DE CARREGAMENTO DE TWEETS
 app.get("/tweets", (req, res) => {
-    res.send(tweets);
+    const last10tweets = tweets.filter((tweet, index) => {
+        if (index >= tweets.length - 10) {
+            return tweet;
+        }
+    })
+    res.send(last10tweets.reverse());
 });
 
 // REQUISIÇÃO DE ENVIO DE TWEET
