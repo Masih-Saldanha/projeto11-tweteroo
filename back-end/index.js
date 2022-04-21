@@ -32,6 +32,22 @@ app.get("/tweets", (req, res) => {
     res.send(last10tweets.reverse());
 });
 
+// REQUISIÇÃO DE CARREGAMENTO DE TWEETS DO USUARIO APENAS
+app.get("/tweets/:USERNAME", (req, res) => {
+    const { USERNAME } = req.params;
+    const userTweetsFilter = tweets.filter(tweet => {
+        if (USERNAME === tweet.username) {
+            return tweet;
+        }
+    })
+    const last10tweets = userTweetsFilter.filter((tweet, index) => {
+        if (index >= tweets.length - 10) {
+            return tweet;
+        }
+    })
+    res.send(last10tweets.reverse());
+});
+
 // REQUISIÇÃO DE ENVIO DE TWEET
 app.post("/tweets", (req, res) => {
     const { tweet } = req.body;
