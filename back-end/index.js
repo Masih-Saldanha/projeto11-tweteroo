@@ -3,33 +3,36 @@ import cors from "cors";
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
-// FORMATO USUÁRIO:
-let user = {
-    username: '',
-    avatar: ""
-}
+// ARRAY DE USUÁRIOS:
+let users = [];
 
-// FORMATO TWEET:
-let tweet = {
-    username: "",
-    avatar: "",
-    tweet: "",
-}
+// ARRAY DE TWEETS NA TELA:
+let tweets = [];
 
 // REQUISIÇÃO DE LOGIN
 app.post("/sign-up", (req, res) => {
-    res.send("Requisição login recebida");
+    const { username, avatar } = req.body;
+    users.push({ username, avatar });
+    res.send("OK");
 });
 
 // REQUISIÇÃO DE CARREGAMENTO DE TWEETS
 app.get("/tweets", (req, res) => {
-    res.send("Requisição de carregamentos de tweets recebida");
+    res.send(tweets);
 });
 
 // REQUISIÇÃO DE ENVIO DE TWEET
 app.post("/tweets", (req, res) => {
-    res.send("Requisição de envio de tweet recebida");
+    const { username, tweet } = req.body;
+    const user = users.find(usuario => {
+        if (usuario.username === username) {
+            return usuario;
+        }
+    })
+    tweets.push({ username: user.username, avatar: user.avatar, tweet });
+    res.send("OK");
 });
 
 app.listen(5000, console.log("Server ligado na porta 5000"))
