@@ -14,8 +14,12 @@ let tweets = [];
 // REQUISIÇÃO DE LOGIN
 app.post("/sign-up", (req, res) => {
     const { username, avatar } = req.body;
-    users.push({ username, avatar });
-    res.send("OK");
+    if (username === "" || avatar === "" || username === undefined || avatar === undefined || typeof(req.body) !== 'object') {
+        res.status(400).send("Todos os campos são obrigatórios!");
+    } else {
+        users.push({ username, avatar });
+        res.status(201).send("CREATED");
+    }
 });
 
 // REQUISIÇÃO DE CARREGAMENTO DE TWEETS
@@ -30,14 +34,19 @@ app.get("/tweets", (req, res) => {
 
 // REQUISIÇÃO DE ENVIO DE TWEET
 app.post("/tweets", (req, res) => {
-    const { username, tweet } = req.body;
-    const user = users.find(usuario => {
-        if (usuario.username === username) {
+    const { tweet } = req.body;
+    const { user } = req.headers;
+    const actualUser = users.find(usuario => {
+        if (usuario.username === user) {
             return usuario;
         }
     })
-    tweets.push({ username: user.username, avatar: user.avatar, tweet });
-    res.send("OK");
+    if (user === "" || tweet === "" || user === undefined || tweet === undefined || typeof(req.body) !== 'object') {
+        res.status(400).send("Todos os campos são obrigatórios!");
+    } else {
+        tweets.push({ username: actualUser.username, avatar: actualUser.avatar, tweet });
+        res.status(201).send("CREATED");
+    }
 });
 
 app.listen(5000, console.log("Server ligado na porta 5000"))
