@@ -24,12 +24,13 @@ app.post("/sign-up", (req, res) => {
 
 // REQUISIÇÃO DE CARREGAMENTO DE TWEETS
 app.get("/tweets", (req, res) => {
-    const last10tweets = tweets.filter((tweet, index) => {
-        if (index >= tweets.length - 10) {
-            return tweet;
-        }
-    })
-    res.send(last10tweets.reverse());
+    const page = req.query.page;
+    const last10tweets = tweets.slice((page * 10) - 10, (page * 10));
+    // if (!(page > 1)) {
+        // res.status(400).send("Informe uma página válida!");
+    // } else {
+        res.send(last10tweets);
+    // }
 });
 
 // REQUISIÇÃO DE CARREGAMENTO DE TWEETS DO USUARIO APENAS
